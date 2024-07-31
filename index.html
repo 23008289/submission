@@ -8,12 +8,38 @@
     <link rel="stylesheet" href="style.css">
     <style>
         body {
+            margin: 0;
+            padding: 0;
+        }
+        .hero-section {
+            position: relative;
             background-image: url('https://thumbs.dreamstime.com/z/fintech-icon-abstract-financial-technology-background-represent-blockchain-investment-internet-90258399.jpg');
             background-size: cover; 
             background-repeat: no-repeat;
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+            backdrop-filter: blur(10px); /* Blur effect */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .content-section {
+            background-color: lightgray;
+            padding: 2rem 0;
         }
         .faq-section {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(250, 248, 248, 0.785);
             padding: 2rem;
             margin-top: 3rem;
             border-radius: 8px;
@@ -33,9 +59,41 @@
         .faq-section dd.show {
             display: block;
         }
+        .get-it-now-section {
+            background-color: #002b5c; 
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .get-it-now-section .btn-primary,
+        .get-it-now-section .btn-secondary {
+            margin: 0.5rem;
+        }
+
+        .latest-articles-section {
+            background-color: white; 
+            padding: 2rem 0;
+        }
+
+        .latest-articles-section .card {
+            margin-bottom: 2rem;
+        }
+
+        .latest-articles-section .card img {
+            height: 200px; 
+            object-fit: cover; 
+        }
+
+
     </style>
 </head>
 <body>
+    <script>
+        // Redirect to login page if not logged in
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+    </script>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="index.html">Finsynch</a>
@@ -55,29 +113,113 @@
             </div>
         </div>
     </nav>
-    <main class="container mt-5">
-        <div class="text-center">
-            <h1 style="padding-bottom: 3rem;">Welcome to Finsynch</h1>
-            <p style="font-size: larger;">Your comprehensive financial management platform.</p>
-            <p style="font-size: larger;">Finsynch will analyse this data using AI algorithm to give customer active financial tools, customized financial information and product suggestion.</p>
-        </div>
+    <main>
+        <section class="hero-section">
+            <div class="hero-content container">
+                <h1>Welcome to Finsynch</h1>
+                <p>Your comprehensive financial management platform.</p>
+                <p>Finsynch will analyze this data using AI algorithms to give customers active financial tools, customized financial information, and product suggestions.</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container mt-5">
+                <h2 class="text-center">Our Key Features</h2>
+                <p class="text-center">Everything you need for seamless banking integration</p>
+                <div class="row text-center">
+                    <div class="col-md-3 key-feature">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/api-settings.png" alt="Open Banking">
+                        <h5>Open Banking</h5>
+                        <p>Secure sharing of financial data for personalized financial products and services.</p>
+                    </div>
+                    <div class="col-md-3 key-feature">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/data-configuration.png" alt="Data Standardisation">
+                        <h5>Data Standardisation</h5>
+                        <p>Standardized data formats ensure compatibility and ease of use.</p>
+                    </div>
+                    <div class="col-md-3 key-feature">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/lock.png" alt="Enhanced Security">
+                        <h5>Enhanced Security</h5>
+                        <p>Advanced security measures to protect your financial data.</p>
+                    </div>
+                    <div class="col-md-3 key-feature">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/personal-growth.png" alt="Personalized Insights">
+                        <h5>Personalized Insights</h5>
+                        <p>AI-driven insights to optimize your financial decisions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="faq-section container">
+                <h2>Common FAQ</h2>
+                <dl>
+                    <dt>What is Finsynch?</dt>
+                    <dd>Finsynch is a comprehensive financial management platform that uses AI algorithms to provide customers with active financial tools, customized financial information, and product suggestions.</dd>
+
+                    <dt>How does Finsynch use my data?</dt>
+                    <dd>Finsynch analyzes your financial data using AI algorithms to offer personalized financial advice, tools, and product recommendations that best suit your needs.</dd>
+
+                    <dt>Is my data secure with Finsynch?</dt>
+                    <dd>Yes, Finsynch uses state-of-the-art encryption and security measures to ensure that your data is always safe and secure.</dd>
+
+                    <dt>Can I link multiple bank accounts to Finsynch?</dt>
+                    <dd>Yes, you can link multiple bank accounts to Finsynch to get a consolidated view of your finances and manage them more effectively.</dd>
+
+                    <dt>Contact Us</dt>
+                    <dd>Number: 69990000 
+                    Email: Finsynch@yahoo.com</dd>
+                </dl>
+            </section>
+        </section>
+        <section class="get-it-now-section text-center">
+            <div class="container">
+                <h2>Get it Now</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, lectus magna fringilla urna.</p>
+                <button class="btn btn-primary">Available on the App Store</button>
+                <button class="btn btn-secondary">Get it on Google Play</button>
+            </div>
+        </section>
+        <section class="latest-articles-section">
+            <div class="container">
+                <h2 class="text-center">Latest Articles</h2>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img class="card-img-top" src="https://assets.weforum.org/article/image/responsive_big_webp_xh_-HjAov4pp35BqKQTUq_PecAGjNPeABPTYAEpyGOM.webp" alt="Article Image">
+                            <div class="card-body">
+                                <h5 class="card-title">What's next for open banking</h5>
+                                <p class="card-text">6 Apr 2021 • Financial and monetary systems</p>
+                                <p class="card-text"></p>Open Banking is an opportunity for banks to innovates.
+                                <a href="#" class="btn btn-primary">Explore More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img class="card-img-top" src="https://assets.bizclikmedia.net/900/a82c09132301ccf73899ad9ca9dc122a:f1c0d833e6c5c94c7e933490ded44800/fintech-magazine-top-10-open-banking-companies.webp" alt="Article Image">
+                            <div class="card-body">
+                                <h5 class="card-title">Top 10 : Open banking account</h5>
+                                <p class="card-text">17 Jul 2024 • FinServ</p>
+                                <p class="card-text"> </p>
+                                <a href="#" class="btn btn-primary">Explore More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <img class="card-img-top" src="https://media.assettype.com/barandbench%2F2024-07%2Fc417678c-3467-4abd-a378-1b60d7c20ada%2F28.jpg?w=1200&auto=format%2Ccompress&fit=max" alt="Article Image">
+                            <div class="card-body">
+                                <h5 class="card-title">Opening of Bank Account and Liability of a Collecting Banker</h5>
+                                <p class="card-text">29 Jul 2024 • The viewpoint</p>
+                                <p class="card-text">The article deals with an important facets of banking - opening an account with any bank and also the liability of the collecting banker.</p>
+                                <a href="#" class="btn btn-primary">Explore More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>        
     </main>
-    <section class="faq-section container">
-        <h2>Common FAQ</h2>
-        <dl>
-            <dt>What is Finsynch?</dt>
-            <dd>Finsynch is a comprehensive financial management platform that uses AI algorithms to provide customers with active financial tools, customized financial information, and product suggestions.</dd>
-
-            <dt>How does Finsynch use my data?</dt>
-            <dd>Finsynch analyzes your financial data using AI algorithms to offer personalized financial advice, tools, and product recommendations that best suit your needs.</dd>
-
-            <dt>Is my data secure with Finsynch?</dt>
-            <dd>Yes, Finsynch uses state-of-the-art encryption and security measures to ensure that your data is always safe and secure.</dd>
-
-            <dt>Can I link multiple bank accounts to Finsynch?</dt>
-            <dd>Yes, you can link multiple bank accounts to Finsynch to get a consolidated view of your finances and manage them more effectively.</dd>
-        </dl>
-    </section>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -96,9 +238,10 @@
                 window.location.href = 'login.html';
             });
         });
-
     </script>
 </body>
 </html>
+
+
 
 

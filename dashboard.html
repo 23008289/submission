@@ -6,6 +6,11 @@
     <title>Account Balances - Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
+        body {
+            background-image: url('https://wallpaperaccess.com/full/2716207.jpg');
+            background-size: cover; 
+            background-repeat: no-repeat;
+        }
         .container {
             text-align: center;
         }
@@ -23,7 +28,7 @@
         button {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #28a745;
+            background-color: blue;
             color: white;
             border: none;
             border-radius: 5px;
@@ -58,13 +63,13 @@
     <div class="container">
         <h1 style="padding-bottom: 3rem;">Account Balances</h1>
         <form id="balanceForm">
-            <label for="spendingsAccount">Spendings Account:</label>
+            <b><label style="font-size: larger;" for="spendingsAccount">Spendings Account:</label></b>
             <input type="number" id="spendingsAccount" value="1200.50">
             <br>
-            <label for="savingsAccount">Savings Account:</label>
+            <b><label style="font-size: larger;" for="savingsAccount">Savings Account:</label></b>
             <input type="number" id="savingsAccount" value="5400.75">
             <br>
-            <label for="investmentAccount">Investment Account:</label>
+            <b><label style="font-size: larger;"for="investmentAccount">Investment Account:</label></b>
             <input type="number" id="investmentAccount" value="10500.00">
             <br>
             <button type="button" onclick="saveChanges()">Save Changes</button>
