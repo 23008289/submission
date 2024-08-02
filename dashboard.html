@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body {
-            background-image: url('https://wallpaperaccess.com/full/2716207.jpg');
+            background-image: url('https://png.pngtree.com/background/20230415/original/pngtree-blue-background-hd-images-browse-stock-photos-vectors-picture-image_2443074.jpg');
             background-size: cover; 
             background-repeat: no-repeat;
         }
@@ -34,14 +34,26 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .transactions {
+            margin-top: 30px;
+        }
+        .transactions table {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .transactions th, .transactions td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
     </style>
 </head>
-    <script>
+<script>
     // Redirect to login page if not logged in
-            if (!localStorage.getItem('isLoggedIn')) {
-                window.location.href = 'login.html';
-        }
-    </script>
+    if (!localStorage.getItem('isLoggedIn')) {
+        window.location.href = 'login.html';
+    }
+</script>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container">
@@ -69,13 +81,26 @@
             <b><label style="font-size: larger;" for="savingsAccount">Savings Account:</label></b>
             <input type="number" id="savingsAccount" value="5400.75" >
             <br>
-            <b><label style="font-size: larger;"for="investmentAccount">Investment Account:</label></b>
+            <b><label style="font-size: larger;" for="investmentAccount">Investment Account:</label></b>
             <input type="number" id="investmentAccount" value="10500.00" >
             <br>
             <button type="button" onclick="saveChanges()">Save Changes</button>
         </form>
-    </main>
-
+        <div class="transactions">
+            <h2>Transaction History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Account</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionHistory"></tbody>
+            </table>
+        </div>
+    </div>
     <script>
         // Retrieve balances from local storage or set default values
         function getBalances() {
@@ -113,13 +138,35 @@
             alert('Balances saved successfully!');
         }
 
+        // Load transactions into the dashboard
+        function loadTransactions() {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const transactionHistory = document.getElementById('transactionHistory');
+            transactionHistory.innerHTML = '';
+
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(transaction.date).toLocaleString()}</td>
+                    <td>${transaction.account}</td>
+                    <td>${transaction.amount.toFixed(2)}</td>
+                    <td>${transaction.method}</td>
+                `;
+                transactionHistory.appendChild(row);
+            });
+        }
+
         // Initialize the dashboard page
         if (window.location.pathname.includes('dashboard.html')) {
-            window.onload = loadBalances;
+            window.onload = () => {
+                loadBalances();
+                loadTransactions();
+            };
         }
     </script>
 </body>
 </html>
+
 
 
 

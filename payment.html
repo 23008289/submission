@@ -66,7 +66,7 @@
     </nav>
     <main class="container mt-5">
         <div class="container">
-            <h1>Make a Payment</h1>
+            <h1>Make a Payment or Deposit</h1>
         <form id="paymentForm">
             <label for="accountSelect">Select Account</label>
             <select id="accountSelect">
@@ -75,16 +75,22 @@
                 <option value="investment">Investment Account</option>
             </select>
             <br>
-            <label for="paymentAmount">Payment Amount</label>
-            <input type="number" id="paymentAmount" placeholder="Enter amount">
+            <label for="transactionType">Transaction Type</label>
+            <select id="transactionType">
+                <option value="payment">Payment</option>
+                <option value="deposit">Deposit</option>
+            </select>
             <br>
-            <label for="paymentMethod">Select Payment Method</label>
+            <label for="transactionAmount">Amount</label>
+            <input type="number" id="transactionAmount" placeholder="Enter amount">
+            <br>
+            <label for="paymentMethod" id="paymentMethodLabel">Select Payment Method</label>
             <select id="paymentMethod">
                 <option value="paywave">PayWave</option>
                 <option value="paynow">PayNow</option>
             </select>
             <br>
-            <button type="button" onclick="makePayment()">Make Payment</button>
+            <button type="button" onclick="handleTransaction()">Submit</button>
         </form>
     </main>
 
@@ -105,30 +111,66 @@
             localStorage.setItem('investmentAccount', balances.investment);
         }
 
-        // Make a payment and deduct from the selected account
-        function makePayment() {
+        // Save transaction to local storage
+        function saveTransaction(transaction) {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // Handle the transaction based on the type
+        function handleTransaction() {
             const accountSelect = document.getElementById('accountSelect').value;
-            const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
+            const transactionType = document.getElementById('transactionType').value;
+            const transactionAmount = parseFloat(document.getElementById('transactionAmount').value);
             const paymentMethod = document.getElementById('paymentMethod').value;
-            
-            if (isNaN(paymentAmount) || paymentAmount <= 0) {
-                alert('Please enter a valid payment amount.');
+
+            if (isNaN(transactionAmount) || transactionAmount <= 0) {
+                alert('Please enter a valid amount.');
                 return;
             }
 
             const balances = getBalances();
 
-            if (balances[accountSelect] < paymentAmount) {
-                alert('Insufficient balance in the selected account.');
-                return;
+            if (transactionType === 'payment') {
+                if (balances[accountSelect] < transactionAmount) {
+                    alert('Insufficient balance in the selected account.');
+                    return;
+                }
+                balances[accountSelect] -= transactionAmount;
+                saveTransaction({
+                    date: new Date(),
+                    account: accountSelect,
+                    amount: -transactionAmount,
+                    method: paymentMethod
+                });
+                alert('Payment successful! Redirecting to ' + paymentMethod + '...');
+            } else if (transactionType === 'deposit') {
+                balances[accountSelect] += transactionAmount;
+                saveTransaction({
+                    date: new Date(),
+                    account: accountSelect,
+                    amount: transactionAmount,
+                    method: 'Deposit'
+                });
+                alert('Deposit successful!');
             }
 
-            balances[accountSelect] -= paymentAmount;
             saveBalances(balances);
-
-            alert('Payment successful! Redirecting to ' + paymentMethod + '...')
         }
+
+        // Toggle payment method visibility based on transaction type
+        document.getElementById('transactionType').addEventListener('change', function () {
+            const paymentMethodLabel = document.getElementById('paymentMethodLabel');
+            const paymentMethod = document.getElementById('paymentMethod');
+            if (this.value === 'deposit') {
+                paymentMethodLabel.style.display = 'none';
+                paymentMethod.style.display = 'none';
+            } else {
+                paymentMethodLabel.style.display = 'block';
+                paymentMethod.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
-
