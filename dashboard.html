@@ -8,11 +8,12 @@
     <style>
         body {
             background-image: url('https://files.123freevectors.com/wp-content/original/121377-light-grey-abstract-texture-background.jpg');
-            background-size: cover;
+            background-size: cover; 
             background-repeat: no-repeat;
         }
         .container {
             text-align: center;
+            color: rgb(13, 12, 12);
         }
         h1 {
             margin-top: 20px;
@@ -23,13 +24,25 @@
             justify-content: center;
             margin: 10px 0;
         }
+        .account label {
+            margin-right: 10px;
+        }
         .account input {
-            width: 200px;
+            width: 150px;
             padding: 8px;
-            margin: 0 10px;
+            margin-right: 10px;
         }
         .account button {
-            background-color: rgb(108, 143, 176);
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: blue;
             color: white;
             border: none;
             border-radius: 5px;
@@ -78,23 +91,23 @@
         <form id="balanceForm">
             <div class="account">
                 <b><label for="spendingsAccount">Spendings Account:</label></b>
-                <input type="number" id="spendingsAccount" value="1200.50">
+                <input type="number" id="spendingsAccount" value="1200.50" >
                 <button type="button" onclick="removeAccount('spendings')">Remove</button>
             </div>
             <div class="account">
                 <b><label for="savingsAccount">Savings Account:</label></b>
-                <input type="number" id="savingsAccount" value="5400.75">
+                <input type="number" id="savingsAccount" value="5400.75" >
                 <button type="button" onclick="removeAccount('savings')">Remove</button>
             </div>
             <div class="account">
                 <b><label for="investmentAccount">Investment Account:</label></b>
-                <input type="number" id="investmentAccount" value="10500.00">
+                <input type="number" id="investmentAccount" value="10500.00" >
                 <button type="button" onclick="removeAccount('investment')">Remove</button>
             </div>
-            <div id="additionalAccounts"></div>
+            <div id="additionalAccountsContainer"></div>
             <button type="button" onclick="saveChanges()">Save Changes</button>
+            <button type="button" onclick="window.location.href='add-account.html'">Add Account</button>
         </form>
-        <a href="add-account.html" class="btn btn-primary mt-3">Add Account</a>
         <div class="transactions">
             <h2>Transaction History</h2>
             <table>
@@ -133,20 +146,7 @@
             document.getElementById('spendingsAccount').value = balances.spendings.toFixed(2);
             document.getElementById('savingsAccount').value = balances.savings.toFixed(2);
             document.getElementById('investmentAccount').value = balances.investment.toFixed(2);
-
-            const additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
-            const additionalAccountsDiv = document.getElementById('additionalAccounts');
-            additionalAccountsDiv.innerHTML = '';
-            additionalAccounts.forEach(account => {
-                const accountDiv = document.createElement('div');
-                accountDiv.className = 'account';
-                accountDiv.innerHTML = `
-                    <b><label>${account.name}:</label></b>
-                    <input type="number" value="${account.balance.toFixed(2)}" readonly>
-                    <button type="button" onclick="removeAdditionalAccount('${account.name}')">Remove</button>
-                `;
-                additionalAccountsDiv.appendChild(accountDiv);
-            });
+            loadAdditionalAccounts();
         }
 
         // Save changes made to the balances manually (for testing purposes)
@@ -159,22 +159,6 @@
 
             saveBalances(balances);
             alert('Balances saved successfully!');
-        }
-
-        // Remove account
-        function removeAccount(accountType) {
-            localStorage.removeItem(`${accountType}Account`);
-            loadBalances();
-            alert(`${accountType.charAt(0).toUpperCase() + accountType.slice(1)} Account removed successfully!`);
-        }
-
-        // Remove additional account
-        function removeAdditionalAccount(accountName) {
-            let additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
-            additionalAccounts = additionalAccounts.filter(account => account.name !== accountName);
-            localStorage.setItem('additionalAccounts', JSON.stringify(additionalAccounts));
-            loadBalances();
-            alert(`${accountName} removed successfully!`);
         }
 
         // Load transactions into the dashboard
@@ -192,6 +176,40 @@
                     <td>${transaction.method}</td>
                 `;
                 transactionHistory.appendChild(row);
+            });
+        }
+
+        // Remove account
+        function removeAccount(accountType) {
+            if (accountType === 'spendings') {
+                localStorage.removeItem('spendingsAccount');
+            } else if (accountType === 'savings') {
+                localStorage.removeItem('savingsAccount');
+            } else if (accountType === 'investment') {
+                localStorage.removeItem('investmentAccount');
+            } else {
+                const additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
+                const updatedAccounts = additionalAccounts.filter(account => account.name !== accountType);
+                localStorage.setItem('additionalAccounts', JSON.stringify(updatedAccounts));
+            }
+            window.location.reload();
+        }
+
+        // Load additional accounts into the dashboard
+        function loadAdditionalAccounts() {
+            const additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
+            const container = document.getElementById('additionalAccountsContainer');
+            container.innerHTML = '';
+            
+            additionalAccounts.forEach(account => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'account';
+                accountDiv.innerHTML = `
+                    <b><label for="${account.name}">${account.name}:</label></b>
+                    <input type="number" id="${account.name}" value="${account.balance.toFixed(2)}">
+                    <button type="button" onclick="removeAccount('${account.name}')">Remove</button>
+                `;
+                container.appendChild(accountDiv);
             });
         }
 
