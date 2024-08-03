@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body {
-            background-image: url('https://png.pngtree.com/background/20230415/original/pngtree-blue-background-hd-images-browse-stock-photos-vectors-picture-image_2443074.jpg');
-            background-size: cover; 
+            background-image: url('https://files.123freevectors.com/wp-content/original/121377-light-grey-abstract-texture-background.jpg');
+            background-size: cover;
             background-repeat: no-repeat;
         }
         .container {
@@ -18,17 +18,18 @@
             margin-top: 20px;
         }
         .account {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin: 10px 0;
         }
         .account input {
-            width: 100%;
+            width: 200px;
             padding: 8px;
-            margin-top: 5px;
+            margin: 0 10px;
         }
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: blue;
+        .account button {
+            background-color: rgb(108, 143, 176);
             color: white;
             border: none;
             border-radius: 5px;
@@ -75,17 +76,25 @@
     <div class="container">
         <h1 style="padding-bottom: 3rem;">Account Balances</h1>
         <form id="balanceForm">
-            <b><label style="font-size: larger;" for="spendingsAccount">Spendings Account:</label></b>
-            <input type="number" id="spendingsAccount" value="1200.50" >
-            <br>
-            <b><label style="font-size: larger;" for="savingsAccount">Savings Account:</label></b>
-            <input type="number" id="savingsAccount" value="5400.75" >
-            <br>
-            <b><label style="font-size: larger;" for="investmentAccount">Investment Account:</label></b>
-            <input type="number" id="investmentAccount" value="10500.00" >
-            <br>
+            <div class="account">
+                <b><label for="spendingsAccount">Spendings Account:</label></b>
+                <input type="number" id="spendingsAccount" value="1200.50">
+                <button type="button" onclick="removeAccount('spendings')">Remove</button>
+            </div>
+            <div class="account">
+                <b><label for="savingsAccount">Savings Account:</label></b>
+                <input type="number" id="savingsAccount" value="5400.75">
+                <button type="button" onclick="removeAccount('savings')">Remove</button>
+            </div>
+            <div class="account">
+                <b><label for="investmentAccount">Investment Account:</label></b>
+                <input type="number" id="investmentAccount" value="10500.00">
+                <button type="button" onclick="removeAccount('investment')">Remove</button>
+            </div>
+            <div id="additionalAccounts"></div>
             <button type="button" onclick="saveChanges()">Save Changes</button>
         </form>
+        <a href="add-account.html" class="btn btn-primary mt-3">Add Account</a>
         <div class="transactions">
             <h2>Transaction History</h2>
             <table>
@@ -124,6 +133,20 @@
             document.getElementById('spendingsAccount').value = balances.spendings.toFixed(2);
             document.getElementById('savingsAccount').value = balances.savings.toFixed(2);
             document.getElementById('investmentAccount').value = balances.investment.toFixed(2);
+
+            const additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
+            const additionalAccountsDiv = document.getElementById('additionalAccounts');
+            additionalAccountsDiv.innerHTML = '';
+            additionalAccounts.forEach(account => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'account';
+                accountDiv.innerHTML = `
+                    <b><label>${account.name}:</label></b>
+                    <input type="number" value="${account.balance.toFixed(2)}" readonly>
+                    <button type="button" onclick="removeAdditionalAccount('${account.name}')">Remove</button>
+                `;
+                additionalAccountsDiv.appendChild(accountDiv);
+            });
         }
 
         // Save changes made to the balances manually (for testing purposes)
@@ -136,6 +159,22 @@
 
             saveBalances(balances);
             alert('Balances saved successfully!');
+        }
+
+        // Remove account
+        function removeAccount(accountType) {
+            localStorage.removeItem(`${accountType}Account`);
+            loadBalances();
+            alert(`${accountType.charAt(0).toUpperCase() + accountType.slice(1)} Account removed successfully!`);
+        }
+
+        // Remove additional account
+        function removeAdditionalAccount(accountName) {
+            let additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
+            additionalAccounts = additionalAccounts.filter(account => account.name !== accountName);
+            localStorage.setItem('additionalAccounts', JSON.stringify(additionalAccounts));
+            loadBalances();
+            alert(`${accountName} removed successfully!`);
         }
 
         // Load transactions into the dashboard
@@ -166,8 +205,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-

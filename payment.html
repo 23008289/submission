@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body {
-            background-image: url('https://wallpaperaccess.com/full/4597136.jpg');
+            background-image: url('https://th.bing.com/th/id/R.1da5894d7df8d9f2357083bea769e047?rik=Qd0OFEI21IPlHA&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f04%2fGrey-backgrounds-wallpapers-HD.png&ehk=DKv3Sf3USm1nzHu64mOv0IQzq5stk%2buvWjnjjJq059s%3d&risl=1&pid=ImgRaw&r=0');
             background-size: cover; 
             background-repeat: no-repeat;
         }
@@ -171,6 +171,35 @@
                 paymentMethod.style.display = 'block';
             }
         });
+
+        // Load accounts into the account dropdown
+        function loadAccounts() {
+            const accounts = getBalances();
+            const additionalAccounts = JSON.parse(localStorage.getItem('additionalAccounts')) || [];
+            const accountSelect = document.getElementById('accountSelect');
+            accountSelect.innerHTML = '';
+
+            Object.keys(accounts).forEach(account => {
+                const option = document.createElement('option');
+                option.value = account;
+                option.textContent = `${account.charAt(0).toUpperCase() + account.slice(1)} Account`;
+                accountSelect.appendChild(option);
+            });
+
+            additionalAccounts.forEach(account => {
+                const option = document.createElement('option');
+                option.value = account.name;
+                option.textContent = account.name;
+                accountSelect.appendChild(option);
+            });
+        }
+
+        // Initialize the payment page
+        if (window.location.pathname.includes('payment.html')) {
+            window.onload = () => {
+                loadAccounts();
+            };
+        }
     </script>
 </body>
 </html>
