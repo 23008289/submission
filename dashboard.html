@@ -33,7 +33,7 @@
             margin-right: 10px;
         }
         .account button {
-            background-color: red;
+            background-color: rgb(99, 110, 179);
             color: white;
             border: none;
             border-radius: 5px;
@@ -117,6 +117,7 @@
                         <th>Account</th>
                         <th>Amount</th>
                         <th>Method</th>
+                        <th>Transaction Type</th> <!-- Added Transaction Type Column -->
                     </tr>
                 </thead>
                 <tbody id="transactionHistory"></tbody>
@@ -129,7 +130,8 @@
             return {
                 spendings: parseFloat(localStorage.getItem('spendingsAccount')) || 1200.50,
                 savings: parseFloat(localStorage.getItem('savingsAccount')) || 5400.75,
-                investment: parseFloat(localStorage.getItem('investmentAccount')) || 10500.00
+                investment: parseFloat(localStorage.getItem('investmentAccount')) || 10500.00,
+                additional: JSON.parse(localStorage.getItem('additionalAccounts')) || []
             };
         }
 
@@ -138,6 +140,7 @@
             localStorage.setItem('spendingsAccount', balances.spendings);
             localStorage.setItem('savingsAccount', balances.savings);
             localStorage.setItem('investmentAccount', balances.investment);
+            localStorage.setItem('additionalAccounts', JSON.stringify(balances.additional));
         }
 
         // Load balances into the dashboard
@@ -154,8 +157,17 @@
             const balances = {
                 spendings: parseFloat(document.getElementById('spendingsAccount').value),
                 savings: parseFloat(document.getElementById('savingsAccount').value),
-                investment: parseFloat(document.getElementById('investmentAccount').value)
+                investment: parseFloat(document.getElementById('investmentAccount').value),
+                additional: []
             };
+
+            const additionalAccountsContainer = document.getElementById('additionalAccountsContainer');
+            const additionalAccounts = additionalAccountsContainer.querySelectorAll('.account');
+            additionalAccounts.forEach(account => {
+                const accountName = account.querySelector('label').innerText.replace(':', '');
+                const accountBalance = parseFloat(account.querySelector('input').value);
+                balances.additional.push({ name: accountName, balance: accountBalance });
+            });
 
             saveBalances(balances);
             alert('Balances saved successfully!');
@@ -174,6 +186,7 @@
                     <td>${transaction.account}</td>
                     <td>${transaction.amount.toFixed(2)}</td>
                     <td>${transaction.method}</td>
+                    <td>${transaction.transactionType}</td> <!-- Display Transaction Type -->
                 `;
                 transactionHistory.appendChild(row);
             });
@@ -213,12 +226,9 @@
             });
         }
 
-        // Initialize the dashboard page
-        if (window.location.pathname.includes('dashboard.html')) {
-            window.onload = () => {
-                loadBalances();
-                loadTransactions();
-            };
+        window.onload = function() {
+            loadBalances();
+            loadTransactions();
         }
     </script>
 </body>
